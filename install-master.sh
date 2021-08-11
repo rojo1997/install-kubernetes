@@ -35,10 +35,9 @@ systemctl daemon-reload
 systemctl restart docker
 
 # Iniciar kubeadm
-kubeadm reset --force
-kubeadm init --pod-network-cidr=192.168.0.0/16
+kubeadm init
 
-# Instalar red calico
-curl https://docs.projectcalico.org/manifests/calico.yaml -O
-kubectl apply -f calico.yaml
-rm calico.yaml
+# Instalar red cilium
+sudo snap install helm --classic
+helm repo add cilium https://helm.cilium.io/
+helm install cilium cilium/cilium --version 1.9.9 --namespace kube-system
