@@ -2,13 +2,10 @@
 swapoff -a
 
 # Configuración de las tablas IP
-cat <<EOF | tee /etc/modules-load.d/k8s.conf \
-br_netfilter \
-EOF
-cat <<EOF | tee /etc/sysctl.d/k8s.conf \
-net.bridge.bridge-nf-call-ip6tables = 1 \
-net.bridge.bridge-nf-call-iptables = 1 \
-EOF
+modprobe br_netfilter
+cat "br_netfilter" > /etc/modules-load.d/k8s.conf
+cat "net.bridge.bridge-nf-call-ip6tables = 1" >> /etc/sysctl.d/k8s.conf
+cat "net.bridge.bridge-nf-call-iptables = 1" >> /etc/sysctl.d/k8s.conf
 sysctl --system
 
 # Instalar docker
@@ -25,16 +22,17 @@ apt-get install -y kubelet kubeadm kubectl
 apt-mark hold kubelet kubeadm kubectl
 
 # Configurar cgroup driver
-cat <<EOF | sudo tee /etc/docker/daemon.json \
-{ \
+echo '{ \
   "exec-opts": ["native.cgroupdriver=systemd"], \
   "log-driver": "json-file", \
   "log-opts": { \
     "max-size": "100m" \
   }, \
   "storage-driver": "overlay2" \
-} \
-EOF
+}' > /etc/docker/daemon.json
 systemctl enable docker
 systemctl daemon-reload
 systemctl restart docker
+
+# Reiniciar kubelet
+systemctl restart kubelet
