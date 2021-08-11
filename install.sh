@@ -3,9 +3,9 @@ swapoff -a
 
 # Configuración de las tablas IP
 modprobe br_netfilter
-cat "br_netfilter" > /etc/modules-load.d/k8s.conf
-cat "net.bridge.bridge-nf-call-ip6tables = 1" >> /etc/sysctl.d/k8s.conf
-cat "net.bridge.bridge-nf-call-iptables = 1" >> /etc/sysctl.d/k8s.conf
+echo "br_netfilter" > /etc/modules-load.d/k8s.conf
+echo "net.bridge.bridge-nf-call-ip6tables = 1" >> /etc/sysctl.d/k8s.conf
+echo "net.bridge.bridge-nf-call-iptables = 1" >> /etc/sysctl.d/k8s.conf
 sysctl --system
 
 # Instalar docker
