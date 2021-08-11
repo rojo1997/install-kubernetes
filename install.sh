@@ -9,7 +9,7 @@ cat "net.bridge.bridge-nf-call-iptables = 1" >> /etc/sysctl.d/k8s.conf
 sysctl --system
 
 # Instalar docker
-apt-get install docker.io
+apt-get install -y docker.io
 systemctl restart docker
 
 # Instalar Kubectl Kubelet Kubeadm
