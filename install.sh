@@ -22,17 +22,23 @@ apt-get install -y kubelet kubeadm kubectl
 apt-mark hold kubelet kubeadm kubectl
 
 # Configurar cgroup driver
-echo '{ \
-  "exec-opts": ["native.cgroupdriver=systemd"], \
-  "log-driver": "json-file", \
-  "log-opts": { \
-    "max-size": "100m" \
-  }, \
-  "storage-driver": "overlay2" \
+echo '{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2"
 }' > /etc/docker/daemon.json
 systemctl enable docker
 systemctl daemon-reload
 systemctl restart docker
 
-# Reiniciar kubelet
-systemctl restart kubelet
+# Iniciar kubeadm
+kubeadm reset --force
+kubeadm init --pod-network-cidr=192.168.0.0/16
+
+# Instalar red calico
+curl https://docs.projectcalico.org/manifests/calico.yaml -O
+kubectl apply -f calico.yaml
+rm calico.yaml
