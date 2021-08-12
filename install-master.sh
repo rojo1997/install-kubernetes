@@ -35,7 +35,8 @@ systemctl daemon-reload
 systemctl restart docker
 
 # Iniciar kubeadm
-kubeadm init
+kubeadm init --pod-network-cidr
+export KUBECONFIG=/etc/kubernetes/admin.conf
 
 # Instalar red cilium
 sudo snap install helm --classic
