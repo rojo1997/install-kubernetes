@@ -35,7 +35,7 @@ systemctl daemon-reload
 systemctl restart docker
 
 # Iniciar kubeadm
-kubeadm init --pod-network-cidr
+kubeadm init --pod-network-cidr=192.168.100.0/24
 export KUBECONFIG=/etc/kubernetes/admin.conf
 
 # Instalar red cilium
